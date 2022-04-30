@@ -6,7 +6,7 @@ int height = 25;
 int width = 100;
 
 int gameover = 0, counter, gameover2 = 0, choice, counter2;
-int lflag = 0, rflag = 0, uflag = 0, dflag = 0;
+int lflag = 0, rflag = 0, uflag = 0, dflag = 0, hit_flag = 0;
 int lflag2 = 0, rflag2 = 0, uflag2 = 0, dflag2 = 0;
 short fcount;
 
@@ -37,7 +37,6 @@ class Snake
 	{
 		gotoxy(101, 0);
 		textcolour(10);
-		cout << "MADE BY= B.SUSHANT";
 		textcolour(6);
 		gotoxy(101, 2);
 		cout << playername << "'s SCORE = " << counter * 100;
@@ -73,17 +72,17 @@ public:
 		for (int i = 0; i <= width; i++)
 		{
 			gotoxy(i, 0);
-			cout << "Û";
+			cout << "Ã›";
 			gotoxy(i, height);
-			cout << "Û";
+			cout << "Ã›";
 		}
 
 		for (int i = 0; i <= height; i++)
 		{
 			gotoxy(0, i);
-			cout << "Û";
+			cout << "Ã›";
 			gotoxy(width, i);
-			cout << "Û";
+			cout << "Ã›";
 		}
 	}
 
@@ -136,7 +135,7 @@ public:
 		while (ptr != NULL)
 		{
 			gotoxy(ptr->nx, ptr->ny);
-			cout << "Û";
+			cout << "Ã›";
 			ptr = ptr->next;
 		}
 	}
@@ -156,17 +155,28 @@ public:
 
 
 
-	void draw()
+	void draw1()
 	{
 
-		drawlist(head, 2);
-		drawlist(head2, 5);
+		drawlist(head, 2);//draw snake 1
+		gotoxy(fx, fy);
+		textcolour(4);
+		cout << "@";
+		Sleep(70);
+		destroylist(head);
+	}
+	void draw2()
+	{
+
+		drawlist(head, 2);//draw snake 1
+		drawlist(head2, 5);//draw snake 1
 		gotoxy(fx, fy);
 		textcolour(4);
 		cout << "@";
 		Sleep(70);
 		destroylist(head);
 		destroylist(head2);
+
 	}
 
 	void resetflag()
@@ -175,6 +185,7 @@ public:
 		dflag = 0;
 		lflag = 0;
 		rflag = 0;
+		hit_flag = 0;
 	}
 
 	void resetflag2()
@@ -183,6 +194,7 @@ public:
 		dflag2 = 0;
 		lflag2 = 0;
 		rflag2 = 0;
+		hit_flag = 0;
 	}
 
 	void play()
@@ -244,7 +256,7 @@ public:
 		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
 		textcolour(10);
 		gotoxy(width / 2 - 20, height / 2 - 10);
-		cout << "*** WELCOME TO SNAKE GAME BY B.SUSHANT *** ";
+		cout << "*** WELCOME TO SNAKE GAME *** ";
 		textcolour(9);
 		gotoxy(width / 2 - 16, height / 2 - 3);
 		cout << "Press 1 For Single player \n";
@@ -252,6 +264,16 @@ public:
 		cout << "Press 2 For Multiplayer \n";
 		gotoxy(width / 2 - 16, height / 2);
 		cin >> choice;
+		if (choice != 1 && choice != 2)// test_case_1 handling: if the user entered any input but 1 or 2 the game will not crash, instead it will ask the user to enter valid input and the game will run again.
+		{
+			cin.clear();
+			cin.ignore(1000, '\n');
+			gotoxy(width / 2 - 16, height / 2 + 1);
+			cout << "Please enter 1 or 2";
+			Sleep(1000);
+			system("cls");
+			welcome();
+		}
 		system("cls");
 	}
 
@@ -295,12 +317,13 @@ public:
 
 	char end()
 	{
+	en:
 		char c;
 		gotoxy(width / 2 - 5, height / 2 - 4);
 		cout << "GAME OVER \n";
 		textcolour(5);
-		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
-
+		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4+1);
+		if (hit_flag)  goto here;
 		textcolour(1);
 		gotoxy(width / 2 - 15, height / 2 - 2);
 		cout << playername << " You Scored : " << counter * 100;
@@ -309,34 +332,59 @@ public:
 			gotoxy(width / 2 - 15, height / 2);
 			cout << playername2 << " You Scored : " << counter2 * 100;
 			textcolour(4);
-			if (gameover != 0)
+			if (gameover != 0 && fcount != 0)
 			{
 				gotoxy(width / 2 - 15, height / 2 + 2);
+				cout << playername2 << " has WON !";
+				gotoxy(width / 2 - 15, height / 2 + 3);
 				cout << playername << " has lost !";
 			}
-			else
+			else if (gameover == 0 && fcount != 0)
 			{
 				gotoxy(width / 2 - 15, height / 2 + 2);
+				cout << playername << " has WON !";
+				gotoxy(width / 2 - 15, height / 2 + 3);
 				cout << playername2 << " has lost !";
 			}
 			if (fcount == 0)
 			{
 				textcolour(4);
-				gotoxy(width / 2 - 15, height / 2 + 2);
 				if (counter > counter2)
 				{
+					gotoxy(width / 2 - 15, height / 2 + 2);
 					cout << playername << " has WON !";
+					gotoxy(width / 2 - 15, height / 2 + 3);
+					cout << playername2 << " has lost !";
 				}
-				else
+				else if (counter < counter2)
 				{
+					gotoxy(width / 2 - 15, height / 2 + 2);
 					cout << playername2 << " has WON !";
+					gotoxy(width / 2 - 15, height / 2 + 3);
+					cout << playername << " has lost !";
+				}
+				else {
+					gotoxy(width / 2 - 15, height / 2 + 2);
+					cout << "TIE !!";
 				}
 			}
 		}
+		here:
 		textcolour(6);
-		gotoxy(width / 2 - 15, height / 2 + 4);
+		gotoxy(width / 2 - 15, height / 2 + 5);
 		cout << "Want To Play Again ? (Y/N) : ";
 		cin >> c;
+		if (cin.peek() != '\n' || (c != 'y' && c != 'Y' && c != 'n' && c != 'N'))
+		{
+
+			cin.clear();
+			cin.ignore(1000, '\n');
+			gotoxy(width / 2 - 15, height / 2 + 6);
+			cout << "Please enter Y or N";
+			Sleep(1000);
+			system("cls");
+			goto en;
+		}
 		system("cls");
 		return c;
 
@@ -451,6 +499,8 @@ public:
 	{
 		if (fcount == 0)
 		{
+			gotoxy(fx, fy);
+			cout << " ";
 			gameover = 1;
 			gameover2 = 1;
 		}
@@ -458,13 +508,40 @@ public:
 
 	void checkup()
 	{
-		if (choice == 1)
-		{
+
 			if (x == width || x == 0)
+			{
+				gotoxy(fx, fy);
+				cout << " ";
 				gameover = 1;
+			}			
 			if (y == height || y == 0)
+			{
+				gotoxy(fx, fy);
+				cout << " ";
 				gameover = 1;
-		}
+			}
+			struct node* one = head;
+			struct node* two = head2;
+			while (one != NULL)
+			{
+				while (two != NULL)
+				{
+					if (one->nx == two->nx && one->ny == two->ny)
+					{
+						gotoxy(fx, fy);
+						cout << " ";
+						gameover = 1;
+						gameover2 = 1;
+						gameover = 1;
+						hit_flag = true;
+						break;
+					}
+					two = two->next;
+				}
+				one = one->next;
+				two = head2;
+			}
 		drawagain();
 
 		struct node* h;
@@ -508,6 +585,18 @@ public:
 
 	void checkup2()
 	{
+		if (x2 == width || x2 == 0)
+		{
+			gotoxy(fx, fy);
+			cout << " ";
+			gameover2 = 1;
+		}
+		if (y2 == height || y2 == 0)
+		{
+			gotoxy(fx, fy);
+			cout << " ";
+			gameover2 = 1;
+		}
 		drawagain2();
 		struct node* h;
 		h = head2->next;
@@ -545,56 +634,58 @@ public:
 	}
 
 
-	void game1()
+	char game1()
 	{
 		char ch;
 		welcome1();
-		do {
-			setup();
-			window();
-			while (!gameover)
-			{
-				draw();
-				play();
-				run();
-				checkup();
-			}
-			ch = end();
-		} while (ch == 'y' || ch == 'Y');
+		setup();
+		window();
+		while (!gameover)
+		{
+			draw1();
+			play();
+			run();
+			checkup();
+		}
+		ch = end();
+		return ch;
 	}
 
-	void game2()
+	char game2()
 	{
 		char ch;
 		welcome2();
-		do {
-
-			setup2();
-			setup();
-			window();
-			while (gameover != 1 && gameover2 != 1)
-			{
-				draw();
-				play();
-				run();
-				checkup();
-				checkup2();
-			}ch = end();
-		} while (ch == 'y' || ch == 'Y');
+		setup2();
+		setup();
+		window();
+		while (gameover != 1 && gameover2 != 1)
+		{
+			draw2();
+			play();
+			run();
+			checkup();
+			checkup2();
+		}
+		ch = end();
+		return ch;
 	}
 
 };
 int main()
 {
 	Snake s;
-	s.welcome();
+again:	s.welcome();
 	if (choice == 1)
 	{
-		s.game1();
+		char ch;
+		ch = s.game1();
+		if (ch == 'y' || ch == 'Y')goto again;
 	}
 	if (choice == 2)
 	{
-		s.game2();
+		char ch;
+		ch = s.game2();
+		if (ch == 'y' || ch == 'Y') { choice = 0; goto again; }
 	}
 	system("exit");
 }
