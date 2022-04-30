@@ -75,7 +75,8 @@ public:
 			gotoxy(117, 6);
 			cout << fcount;
 		}
-
+		gotoxy(101, 7);
+		cout << "Press Esc to pause";
 	}
 
 	void textcolour(int k)
@@ -249,6 +250,16 @@ public:
 				   break;
 			case 100:if (lflag2 != 1) { resetflag2(); rflag2 = 1; }
 					break;
+			case 27: // to pause the game if Esc is pressed
+			{
+				gotoxy(0, 26);
+			    system("pause");
+				for (int i = 0; i < 31; i++)
+				{
+					gotoxy (31-i , 26);
+					cout << "\b" << " ";
+				}
+			}
 
 			default:break;
 			}
