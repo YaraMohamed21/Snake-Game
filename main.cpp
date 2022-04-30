@@ -37,7 +37,6 @@ class Snake
 	{
 		gotoxy(101, 0);
 		textcolour(10);
-		cout << "MADE BY= B.SUSHANT";
 		textcolour(6);
 		gotoxy(101, 2);
 		cout << playername << "'s SCORE = " << counter * 100;
@@ -257,7 +256,7 @@ public:
 		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
 		textcolour(10);
 		gotoxy(width / 2 - 20, height / 2 - 10);
-		cout << "*** WELCOME TO SNAKE GAME BY B.SUSHANT *** ";
+		cout << "*** WELCOME TO SNAKE GAME *** ";
 		textcolour(9);
 		gotoxy(width / 2 - 16, height / 2 - 3);
 		cout << "Press 1 For Single player \n";
@@ -333,27 +332,40 @@ public:
 			gotoxy(width / 2 - 15, height / 2);
 			cout << playername2 << " You Scored : " << counter2 * 100;
 			textcolour(4);
-			if (gameover != 0)
+			if (gameover != 0 && fcount != 0)
 			{
 				gotoxy(width / 2 - 15, height / 2 + 2);
+				cout << playername2 << " has WON !";
+				gotoxy(width / 2 - 15, height / 2 + 3);
 				cout << playername << " has lost !";
 			}
-			else
+			else if (gameover == 0 && fcount != 0)
 			{
 				gotoxy(width / 2 - 15, height / 2 + 2);
+				cout << playername << " has WON !";
+				gotoxy(width / 2 - 15, height / 2 + 3);
 				cout << playername2 << " has lost !";
 			}
 			if (fcount == 0)
 			{
 				textcolour(4);
-				gotoxy(width / 2 - 15, height / 2 + 2);
 				if (counter > counter2)
 				{
+					gotoxy(width / 2 - 15, height / 2 + 2);
 					cout << playername << " has WON !";
+					gotoxy(width / 2 - 15, height / 2 + 3);
+					cout << playername2 << " has lost !";
 				}
-				else
+				else if (counter < counter2)
 				{
+					gotoxy(width / 2 - 15, height / 2 + 2);
 					cout << playername2 << " has WON !";
+					gotoxy(width / 2 - 15, height / 2 + 3);
+					cout << playername << " has lost !";
+				}
+				else {
+					gotoxy(width / 2 - 15, height / 2 + 2);
+					cout << "TIE !!";
 				}
 			}
 		}
