@@ -156,17 +156,28 @@ public:
 
 
 
-	void draw()
+	void draw1()
 	{
 
-		drawlist(head, 2);
-		drawlist(head2, 5);
+		drawlist(head, 2);//draw snake 1
+		gotoxy(fx, fy);
+		textcolour(4);
+		cout << "@";
+		Sleep(70);
+		destroylist(head);
+	}
+	void draw2()
+	{
+
+		drawlist(head, 2);//draw snake 1
+		drawlist(head2, 5);//draw snake 1
 		gotoxy(fx, fy);
 		textcolour(4);
 		cout << "@";
 		Sleep(70);
 		destroylist(head);
 		destroylist(head2);
+
 	}
 
 	void resetflag()
@@ -589,56 +600,58 @@ public:
 	}
 
 
-	void game1()
+	char game1()
 	{
 		char ch;
 		welcome1();
-		do {
-			setup();
-			window();
-			while (!gameover)
-			{
-				draw();
-				play();
-				run();
-				checkup();
-			}
-			ch = end();
-		} while (ch == 'y' || ch == 'Y');
+		setup();
+		window();
+		while (!gameover)
+		{
+			draw1();
+			play();
+			run();
+			checkup();
+		}
+		ch = end();
+		return ch;
 	}
 
-	void game2()
+	char game2()
 	{
 		char ch;
 		welcome2();
-		do {
-
-			setup2();
-			setup();
-			window();
-			while (gameover != 1 && gameover2 != 1)
-			{
-				draw();
-				play();
-				run();
-				checkup();
-				checkup2();
-			}ch = end();
-		} while (ch == 'y' || ch == 'Y');
+		setup2();
+		setup();
+		window();
+		while (gameover != 1 && gameover2 != 1)
+		{
+			draw2();
+			play();
+			run();
+			checkup();
+			checkup2();
+		}
+		ch = end();
+		return ch;
 	}
 
 };
 int main()
 {
 	Snake s;
-	s.welcome();
+again:	s.welcome();
 	if (choice == 1)
 	{
-		s.game1();
+		char ch;
+		ch = s.game1();
+		if (ch == 'y' || ch == 'Y')goto again;
 	}
 	if (choice == 2)
 	{
-		s.game2();
+		char ch;
+		ch = s.game2();
+		if (ch == 'y' || ch == 'Y') { choice = 0; goto again; }
 	}
 	system("exit");
 }
