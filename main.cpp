@@ -6,7 +6,7 @@ int height = 25;
 int width = 100;
 
 int gameover = 0, counter, gameover2 = 0, choice, counter2;
-int lflag = 0, rflag = 0, uflag = 0, dflag = 0;
+int lflag = 0, rflag = 0, uflag = 0, dflag = 0, hit_flag = 0;
 int lflag2 = 0, rflag2 = 0, uflag2 = 0, dflag2 = 0;
 short fcount;
 
@@ -175,6 +175,7 @@ public:
 		dflag = 0;
 		lflag = 0;
 		rflag = 0;
+		hit_flag = 0;
 	}
 
 	void resetflag2()
@@ -183,6 +184,7 @@ public:
 		dflag2 = 0;
 		lflag2 = 0;
 		rflag2 = 0;
+		hit_flag = 0;
 	}
 
 	void play()
@@ -300,7 +302,7 @@ public:
 		cout << "GAME OVER \n";
 		textcolour(5);
 		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
-
+		if (hit_flag)  goto here;
 		textcolour(1);
 		gotoxy(width / 2 - 15, height / 2 - 2);
 		cout << playername << " You Scored : " << counter * 100;
@@ -333,6 +335,7 @@ public:
 				}
 			}
 		}
+		here:
 		textcolour(6);
 		gotoxy(width / 2 - 15, height / 2 + 4);
 		cout << "Want To Play Again ? (Y/N) : ";
@@ -463,6 +466,25 @@ public:
 				gameover = 1;
 			if (y == height || y == 0)
 				gameover = 1;
+			struct node* one = head;
+			struct node* two = head2;
+			while (one != NULL)
+			{
+				while (two != NULL)
+				{
+					if (one->nx == two->nx && one->ny == two->ny)
+					{
+						gameover = 1;
+						gameover2 = 1;
+						gameover = 1;
+						hit_flag = true;
+						break;
+					}
+					two = two->next;
+				}
+				one = one->next;
+				two = head2;
+			}
 		drawagain();
 
 		struct node* h;
