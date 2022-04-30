@@ -1,7 +1,7 @@
 #include<iostream>
 #include<windows.h>
+#include<limits>
 #include<conio.h>
-#include <limits>
 #include <unordered_set>
 using namespace std;
 //Global variables decleration
@@ -39,14 +39,24 @@ class Snake
 
 	struct node* head = NULL; //represents the snake for player 1
 	struct node* head2 = NULL;//represents the snake for player 2
+public:
+	void cursorvisibility(bool x)
+	{   
+		HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 
+		CONSOLE_CURSOR_INFO     cursorInfo;
+
+		GetConsoleCursorInfo(out, &cursorInfo);
+		cursorInfo.bVisible = x;
+		SetConsoleCursorInfo(out, &cursorInfo);
+	}
 	void gotoxy(int x, int y) //fuction to set cursor position
-	{
+	{   
 		COORD pos = { x,y };
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 	}
 
-	void nameandscore()
+	void nameandscore() //display name and score on the screen 
 	{
 		gotoxy(101, 0);
 		textcolour(10);
@@ -65,19 +75,15 @@ class Snake
 			gotoxy(117, 6);
 			cout << fcount;
 		}
+
 	}
-
-
 
 	void textcolour(int k)
 	{
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);//A handle is a pointer or index with no visible type attached to it.
 		//GetStdHandle: Retrieves a handle to the specified standard device (standard input, standard output, or standard error).
-		//msh fhma awy bs msh moshkla :D
 		SetConsoleTextAttribute(hConsole, k);
 	}
-
-public:
 
 	void window() //setting window layout
 	{
@@ -178,8 +184,10 @@ public:
 		gotoxy(fx, fy);
 		textcolour(4);
 		cout << "@";
+		cursorvisibility(false);
 		Sleep(70);
 		destroylist(head);
+		cursorvisibility(true);
 	}
 	void draw2()
 	{
@@ -189,9 +197,11 @@ public:
 		gotoxy(fx, fy);
 		textcolour(4);
 		cout << "@";
+		cursorvisibility(false);
 		Sleep(70);
 		destroylist(head);
 		destroylist(head2);
+		cursorvisibility(true);
 
 	}
 
@@ -220,7 +230,7 @@ public:
 		{
 			ch = _getch();// store the pressed key
 			h = ch; // store the ascii code of the pressed key
-			switch (h)
+			switch (h) // to determine the key pressed and move accordingly
 			{
 			case 72:if (dflag != 1) { resetflag(); uflag = 1; }
 				   break;
@@ -529,6 +539,7 @@ public:
 			cout << " ";
 			gameover = 1;
 		}
+		// die if cross over
 		struct node* current1 = head;
 		struct node* current2 = head2;
 		unordered_set<int> mapx;
@@ -682,7 +693,6 @@ public:
 };
 int main()
 {
-	start = clock();
 	Snake s;
 again: s.welcome();
 	if (choice == 1)
@@ -697,6 +707,6 @@ again: s.welcome();
 		ch = s.game2();
 		if (ch == 'y' || ch == 'Y') { choice = 0; goto again; }
 	}
-	finish = clock();
 	system("exit");
+
 }
