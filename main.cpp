@@ -265,6 +265,16 @@ public:
 		cout << "Press 2 For Multiplayer \n";
 		gotoxy(width / 2 - 16, height / 2);
 		cin >> choice;
+		if (choice != 1 && choice != 2)// test_case_1 handling: if the user entered any input but 1 or 2 the game will not crash, instead it will ask the user to enter valid input and the game will run again.
+		{
+			cin.clear();
+			cin.ignore(1000, '\n');
+			gotoxy(width / 2 - 16, height / 2 + 1);
+			cout << "Please enter 1 or 2";
+			Sleep(1000);
+			system("cls");
+			welcome();
+		}
 		system("cls");
 	}
 
@@ -308,11 +318,12 @@ public:
 
 	char end()
 	{
+	en:
 		char c;
 		gotoxy(width / 2 - 5, height / 2 - 4);
 		cout << "GAME OVER \n";
 		textcolour(5);
-		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
+		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4+1);
 		if (hit_flag)  goto here;
 		textcolour(1);
 		gotoxy(width / 2 - 15, height / 2 - 2);
@@ -348,9 +359,20 @@ public:
 		}
 		here:
 		textcolour(6);
-		gotoxy(width / 2 - 15, height / 2 + 4);
+		gotoxy(width / 2 - 15, height / 2 + 5);
 		cout << "Want To Play Again ? (Y/N) : ";
 		cin >> c;
+		if (cin.peek() != '\n' || (c != 'y' && c != 'Y' && c != 'n' && c != 'N'))
+		{
+
+			cin.clear();
+			cin.ignore(1000, '\n');
+			gotoxy(width / 2 - 15, height / 2 + 6);
+			cout << "Please enter Y or N";
+			Sleep(1000);
+			system("cls");
+			goto en;
+		}
 		system("cls");
 		return c;
 
