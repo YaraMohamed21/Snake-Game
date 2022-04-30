@@ -1,7 +1,6 @@
 #include<iostream>
 #include<windows.h>
 #include<conio.h>
-#include <chrono>
 #include <unordered_set>
 using namespace std;
 //Global variables decleration
@@ -708,8 +707,6 @@ public:
 };
 int main()
 {
-	using Clock = std::chrono::high_resolution_clock;
-	auto start = Clock::now();
 	Snake s;
 again: s.welcome();
 	if (choice == 1)
@@ -725,8 +722,4 @@ again: s.welcome();
 		if (ch == 'y' || ch == 'Y') { choice = 0; goto again; }
 	}
 	system("exit");
-	auto end = Clock::now();
-	cout << "Elapsed time in milliseconds: "
-		<< chrono::duration_cast<chrono::milliseconds>(end - start).count()
-		<< "ms" << endl;
 }
