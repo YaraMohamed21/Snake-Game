@@ -73,17 +73,17 @@ public:
 		for (int i = 0; i <= width; i++)
 		{
 			gotoxy(i, 0);
-			cout << "Û";
+			cout << "Ã›";
 			gotoxy(i, height);
-			cout << "Û";
+			cout << "Ã›";
 		}
 
 		for (int i = 0; i <= height; i++)
 		{
 			gotoxy(0, i);
-			cout << "Û";
+			cout << "Ã›";
 			gotoxy(width, i);
-			cout << "Û";
+			cout << "Ã›";
 		}
 	}
 
@@ -136,7 +136,7 @@ public:
 		while (ptr != NULL)
 		{
 			gotoxy(ptr->nx, ptr->ny);
-			cout << "Û";
+			cout << "Ã›";
 			ptr = ptr->next;
 		}
 	}
@@ -458,13 +458,11 @@ public:
 
 	void checkup()
 	{
-		if (choice == 1)
-		{
+
 			if (x == width || x == 0)
 				gameover = 1;
 			if (y == height || y == 0)
 				gameover = 1;
-		}
 		drawagain();
 
 		struct node* h;
@@ -508,6 +506,10 @@ public:
 
 	void checkup2()
 	{
+		if (x2 == width || x2 == 0)
+			gameover2 = 1;
+		if (y2 == height || y2 == 0)
+			gameover2 = 1;
 		drawagain2();
 		struct node* h;
 		h = head2->next;
