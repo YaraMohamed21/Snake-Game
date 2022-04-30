@@ -1,7 +1,7 @@
 #include<iostream>
 #include<windows.h>
-#include<limits>
 #include<conio.h>
+#include <chrono>
 #include <unordered_set>
 using namespace std;
 //Global variables decleration
@@ -41,7 +41,7 @@ class Snake
 	struct node* head2 = NULL;//represents the snake for player 2
 public:
 	void cursorvisibility(bool x)
-	{   
+	{
 		HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 
 		CONSOLE_CURSOR_INFO     cursorInfo;
@@ -51,7 +51,7 @@ public:
 		SetConsoleCursorInfo(out, &cursorInfo);
 	}
 	void gotoxy(int x, int y) //fuction to set cursor position
-	{   
+	{
 		COORD pos = { x,y };
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 	}
@@ -253,10 +253,10 @@ public:
 			case 27: // to pause the game if Esc is pressed
 			{
 				gotoxy(0, 26);
-			    system("pause");
+				system("pause");
 				for (int i = 0; i < 31; i++)
 				{
-					gotoxy (31-i , 26);
+					gotoxy(31 - i, 26);
 					cout << "\b" << " ";
 				}
 			}
@@ -582,6 +582,8 @@ public:
 		{
 			if (x == h->nx && y == h->ny)
 			{
+				gotoxy(fx, fy);
+				cout << " ";
 				gameover = 1;
 				break;
 			}
@@ -636,6 +638,8 @@ public:
 		{
 			if (x2 == h->nx && y2 == h->ny)
 			{
+				gotoxy(fx, fy);
+				cout << " ";
 				gameover2 = 1;
 				break;
 			}
@@ -704,6 +708,8 @@ public:
 };
 int main()
 {
+	using Clock = std::chrono::high_resolution_clock;
+	auto start = Clock::now();
 	Snake s;
 again: s.welcome();
 	if (choice == 1)
@@ -719,5 +725,8 @@ again: s.welcome();
 		if (ch == 'y' || ch == 'Y') { choice = 0; goto again; }
 	}
 	system("exit");
-
+	auto end = Clock::now();
+	cout << "Elapsed time in milliseconds: "
+		<< chrono::duration_cast<chrono::milliseconds>(end - start).count()
+		<< "ms" << endl;
 }
