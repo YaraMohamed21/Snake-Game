@@ -1,4 +1,3 @@
-@@ -2,23 +2,39 @@
 Snake game using Doubly linked lists.
 
 ##STEPS:
