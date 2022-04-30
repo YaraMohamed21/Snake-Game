@@ -1,20 +1,33 @@
 #include<iostream>
 #include<windows.h>
 #include<conio.h>
-
+#include <limits>
+#include <unordered_set>
+using namespace std;
+//Global variables decleration
+double start, finish;
 int height = 25;
 int width = 100;
-
 int gameover = 0, counter, gameover2 = 0, choice, counter2;
-int lflag = 0, rflag = 0, uflag = 0, dflag = 0, hit_flag = 0;
-int lflag2 = 0, rflag2 = 0, uflag2 = 0, dflag2 = 0;
-short fcount;
+int lflag = 0, rflag = 0, uflag = 0, dflag = 0, hit_flag = 0;//flags for left,right,up and down keyboard keys pressed by player1
+int lflag2 = 0, rflag2 = 0, uflag2 = 0, dflag2 = 0;//flags for left,right,up and down keyboard keys pressed by player2
+short fcount; //number of '@' in case of 2 players
 
 using namespace std;
 class Snake
 {
 
 	int x, y, fx, fy, x2, y2;
+	/*
+	x--->position of x snake for player 1
+	y--->position of y snake for player 1
+	x2-->position of x snake for player 2
+	y2-->position of y snake for player 2
+	fx-->represents position x of '@'
+	fy-->represents position y of '@'
+
+	*/
+
 	char playername[50], playername2[50];;
 
 	struct node
@@ -24,10 +37,10 @@ class Snake
 		struct node* back;
 	};
 
-	struct node* head = NULL;
-	struct node* head2 = NULL;
+	struct node* head = NULL; //represents the snake for player 1
+	struct node* head2 = NULL;//represents the snake for player 2
 
-	void gotoxy(int x, int y)
+	void gotoxy(int x, int y) //fuction to set cursor position
 	{
 		COORD pos = { x,y };
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
@@ -37,6 +50,7 @@ class Snake
 	{
 		gotoxy(101, 0);
 		textcolour(10);
+		cout << "WELCOME !!";
 		textcolour(6);
 		gotoxy(101, 2);
 		cout << playername << "'s SCORE = " << counter * 100;
@@ -57,19 +71,21 @@ class Snake
 
 	void textcolour(int k)
 	{
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);//A handle is a pointer or index with no visible type attached to it.
+		//GetStdHandle: Retrieves a handle to the specified standard device (standard input, standard output, or standard error).
+		//msh fhma awy bs msh moshkla :D
 		SetConsoleTextAttribute(hConsole, k);
 	}
 
 public:
 
-	void window()
+	void window() //setting window layout
 	{
 		if (choice == 1)
 			textcolour(4);
 		else
 			textcolour(1);
-		for (int i = 0; i <= width; i++)
+		for (int i = 0; i <= width; i++)//frame layout
 		{
 			gotoxy(i, 0);
 			cout << "Û";
@@ -104,11 +120,11 @@ public:
 	label1:
 		fx = rand() % width;
 		if (fx == 0 || fx == width)
-			goto label1;
+			goto label1;// go to label1 if x position of '@' hits the side wall 
 	label2:
 		fy = rand() % height;
 		if (fy == 0 || fy == height)
-			goto label2;
+			goto label2;// go to label2 if y position of '@' hits the upper wall 
 	}
 
 	void setup2()
@@ -116,7 +132,7 @@ public:
 		resetflag2();
 		gameover2 = 0;
 		counter2 = 0;
-		fcount = 25;
+		fcount = 2;
 		head2 = new node;
 		head2->nx = width / 2 + 5;
 		head2->ny = height / 2 + 5;
@@ -127,7 +143,7 @@ public:
 
 	}
 
-	void drawlist(struct node* h, int k)
+	void drawlist(struct node* h, int k)// function to draw a snake
 	{
 		textcolour(k);
 		struct node* ptr;
@@ -196,16 +212,14 @@ public:
 		rflag2 = 0;
 		hit_flag = 0;
 	}
-
 	void play()
 	{
 		int h;
 		char ch;
-		if (_kbhit())
+		if (_kbhit())// if a key is pressed
 		{
-
-			ch = _getch();
-			h = ch;
+			ch = _getch();// store the pressed key
+			h = ch; // store the ascii code of the pressed key
 			switch (h)
 			{
 			case 72:if (dflag != 1) { resetflag(); uflag = 1; }
@@ -230,7 +244,6 @@ public:
 			}
 		}
 	}
-
 	void box(int m1, int n1, int m2, int n2)
 	{
 		for (int i = m1; i <= m2; i++)
@@ -250,19 +263,20 @@ public:
 		}
 	}
 
-	void welcome()
+	void welcome()//Welcome page layout
 	{
 		textcolour(5);
 		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
 		textcolour(10);
-		gotoxy(width / 2 - 20, height / 2 - 10);
+		gotoxy(width / 2 - 10, height / 2 - 10);
 		cout << "*** WELCOME TO SNAKE GAME *** ";
 		textcolour(9);
 		gotoxy(width / 2 - 16, height / 2 - 3);
 		cout << "Press 1 For Single player \n";
 		gotoxy(width / 2 - 16, height / 2 - 1);
-		cout << "Press 2 For Multiplayer \n";
+		cout << "Press 2 For 2-players \n";
 		gotoxy(width / 2 - 16, height / 2);
+
 		cin >> choice;
 		if (choice != 1 && choice != 2)// test_case_1 handling: if the user entered any input but 1 or 2 the game will not crash, instead it will ask the user to enter valid input and the game will run again.
 		{
@@ -312,17 +326,14 @@ public:
 		system("cls");
 	}
 
-
-
-
-	char end()
+	char end()//score reveal
 	{
 	en:
 		char c;
 		gotoxy(width / 2 - 5, height / 2 - 4);
 		cout << "GAME OVER \n";
 		textcolour(5);
-		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4+1);
+		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4 + 1);
 		if (hit_flag)  goto here;
 		textcolour(1);
 		gotoxy(width / 2 - 15, height / 2 - 2);
@@ -369,7 +380,7 @@ public:
 				}
 			}
 		}
-		here:
+	here:
 		textcolour(6);
 		gotoxy(width / 2 - 15, height / 2 + 5);
 		cout << "Want To Play Again ? (Y/N) : ";
@@ -391,8 +402,7 @@ public:
 	}
 
 
-
-	void run()
+	void run() //Snake movement
 	{
 		if (uflag == 1)
 			y--;
@@ -414,8 +424,7 @@ public:
 			x2++;
 
 	}
-
-	void dolist(struct node* h, int pp, int qq)
+	void dolist(struct node* h, int pp, int qq) //update head,next and back 
 	{
 		struct node* ptr, * prev;
 		ptr = h;
@@ -508,42 +517,43 @@ public:
 
 	void checkup()
 	{
-
-			if (x == width || x == 0)
+		if (x == width || x == 0)
+		{
+			gotoxy(fx, fy);
+			cout << " ";
+			gameover = 1;
+		}
+		if (y == height || y == 0)
+		{
+			gotoxy(fx, fy);
+			cout << " ";
+			gameover = 1;
+		}
+		struct node* current1 = head;
+		struct node* current2 = head2;
+		unordered_set<int> mapx;
+		unordered_set<int> mapy;
+		while (current1 != NULL)
+		{
+			mapx.insert(current1->nx);
+			mapy.insert(current1->ny);
+			current1 = current1->next;
+		}
+		while (current2 != NULL)
+		{
+			if ((mapx.find(current2->nx) != mapx.end()) && (mapy.find(current2->ny) != mapy.end()))
 			{
 				gotoxy(fx, fy);
 				cout << " ";
 				gameover = 1;
-			}			
-			if (y == height || y == 0)
-			{
-				gotoxy(fx, fy);
-				cout << " ";
+				gameover2 = 1;
 				gameover = 1;
+				hit_flag = true;
+				break;
 			}
-			struct node* one = head;
-			struct node* two = head2;
-			while (one != NULL)
-			{
-				while (two != NULL)
-				{
-					if (one->nx == two->nx && one->ny == two->ny)
-					{
-						gotoxy(fx, fy);
-						cout << " ";
-						gameover = 1;
-						gameover2 = 1;
-						gameover = 1;
-						hit_flag = true;
-						break;
-					}
-					two = two->next;
-				}
-				one = one->next;
-				two = head2;
-			}
+			current2 = current2->next;
+		}
 		drawagain();
-
 		struct node* h;
 		h = head->next;
 		while (h != NULL)
@@ -665,16 +675,16 @@ public:
 			run();
 			checkup();
 			checkup2();
-		}
-		ch = end();
+		}ch = end();
 		return ch;
 	}
 
 };
 int main()
 {
+	start = clock();
 	Snake s;
-again:	s.welcome();
+again: s.welcome();
 	if (choice == 1)
 	{
 		char ch;
@@ -687,5 +697,6 @@ again:	s.welcome();
 		ch = s.game2();
 		if (ch == 'y' || ch == 'Y') { choice = 0; goto again; }
 	}
+	finish = clock();
 	system("exit");
 }
